@@ -10,6 +10,7 @@ int counter;
 float CAPTURE_INTERVAL; //minutes
 
 File dataFile;
+char *filename = "data_0.csv";
 
 bool error = false;
 
@@ -40,8 +41,6 @@ void setup()
             blinkLED();
         };
     }
-
-    char *filename = "data_0.csv";
     
     // ensure unique sequential name
     int nameIndex = 0;
@@ -52,19 +51,6 @@ void setup()
     }
 
     debug(filename);
-
-    // open data file
-    dataFile = SD.open(filename, FILE_WRITE);
-    if (!dataFile)
-    {
-        debug("Error opening data file");
-
-        while(1){
-            //stop further execution
-            blinkLED();
-        }
-
-    }
     
     debug("Card initialized.");
 
@@ -84,8 +70,21 @@ void debug(String msg)
 
 void log(String msg)
 {
+    // open data file
+    dataFile = SD.open(filename, FILE_WRITE);
+    if (!dataFile)
+    {
+        debug("Error opening data file");
+
+        while(1){
+            //stop further execution
+            blinkLED();
+        }
+
+    }
+
     dataFile.println(msg);
-    dataFile.flush();
+    dataFile.close();
     debug(msg); 
 }
 
